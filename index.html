@@ -1,43 +1,40 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
   <title>DarkSould GPT</title>
   <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #0f0f0f, #1a1a1a);
-      color: #f0f0f0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-    .container {
-      text-align: center;
-      padding: 40px;
-      background-color: #222;
-      border-radius: 20px;
-      box-shadow: 0 0 20px rgba(255, 0, 128, 0.5);
-    }
-    h1 {
-      font-size: 2.8rem;
-      color: #ff0080;
-      margin-bottom: 10px;
-    }
-    p {
-      font-size: 1.2rem;
-      color: #ccc;
-    }
+    body { font-family: sans-serif; padding: 30px; background: #111; color: #0f0; }
+    input, button { font-size: 1.1em; padding: 8px; margin-top: 10px; }
+    #response { margin-top: 20px; white-space: pre-wrap; }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>DarkSould GPT</h1>
-    <p>Frontend listo</p>
-  </div>
+  <h1>DarkSould GPT</h1>
+  <p>Escribe tu mensaje:</p>
+  <input type="text" id="userInput" placeholder="¿En qué puedo ayudarte?" size="60">
+  <button onclick="sendMessage()">Enviar</button>
+  <div id="response"></div>
+
+  <script>
+    async function sendMessage() {
+      const message = document.getElementById("userInput").value;
+      const resDiv = document.getElementById("response");
+      resDiv.innerHTML = "⏳ Cargando...";
+
+      try {
+        const response = await fetch("https://darksould-gpt-backend.onrender.com/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message })
+        });
+
+        const data = await response.json();
+        resDiv.innerHTML = data.response || ("❌ Error: " + data.error);
+      } catch (err) {
+        resDiv.innerHTML = "❌ Error de conexión.";
+      }
+    }
+  </script>
 </body>
 </html>
